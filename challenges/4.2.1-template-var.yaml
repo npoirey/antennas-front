@@ -1,7 +1,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: incidents-template-var
+  name: incidents-template-var3
   annotations:
     description: "A template to deploy the Antennas Incident Service"
     tags: "quarkus,service"
@@ -85,3 +85,7 @@ objects:
       port:
         targetPort: http
       wildcardPolicy: None
+parameters:
+  - name: APIKEY
+    description: "api key"
+    value: erable
