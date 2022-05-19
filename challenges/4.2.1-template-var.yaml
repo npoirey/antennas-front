@@ -1,0 +1,87 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: incidents-template-var
+  annotations:
+    description: "A template to deploy the Antennas Incident Service"
+    tags: "quarkus,service"
+    iconClass: icon-quarkus
+objects:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        app.quarkus.io/build-timestamp: 2022-05-15 - 08:38:34 +0000
+      labels:
+        app.kubernetes.io/name: antennas-incident
+        app.kubernetes.io/version: 1.0.0-SNAPSHOT
+      name: antennas-incident
+    spec:
+      ports:
+        - name: http
+          port: 80
+          targetPort: 8080
+      selector:
+        app.kubernetes.io/name: antennas-incident
+        app.kubernetes.io/version: 1.0.0-SNAPSHOT
+      type: ClusterIP
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        app.quarkus.io/build-timestamp: 2022-05-15 - 08:38:34 +0000
+      labels:
+        app.kubernetes.io/name: antennas-incident
+        app.kubernetes.io/version: 1.0.0-SNAPSHOT
+      name: antennas-incident
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: antennas-incident
+          app.kubernetes.io/version: 1.0.0-SNAPSHOT
+      template:
+        metadata:
+          annotations:
+            app.quarkus.io/build-timestamp: 2022-05-15 - 08:38:34 +0000
+          labels:
+            app.kubernetes.io/name: antennas-incident
+            app.kubernetes.io/version: 1.0.0-SNAPSHOT
+        spec:
+          containers:
+            - env:
+                - name: KUBERNETES_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: APIKEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: incidents-secret
+                      key: apikey
+              image: quay.io/sebastienblanc0/antennas-incident:1.0.0-SNAPSHOT
+              imagePullPolicy: Always
+              name: antennas-incident
+              ports:
+                - containerPort: 8080
+                  name: http
+                  protocol: TCP
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: incidents-secret
+    stringData:
+      apikey: ${APIKEY}
+    type: Opaque
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      name: antennas-incident
+    spec:
+      to:
+        kind: Service
+        name: antennas-incident
+        weight: 100
+      port:
+        targetPort: http
+      wildcardPolicy: None
