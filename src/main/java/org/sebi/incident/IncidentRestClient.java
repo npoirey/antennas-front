@@ -12,5 +12,5 @@ import java.util.List;
 public interface IncidentRestClient {
     @GET
     @Path("/incidents")
-    List<Incident> getIncidents(@QueryParam("APIKEY") String apiKey);
+    List<Incident> getIncidents(@QueryParam("api_key") String apiKey);
 }
