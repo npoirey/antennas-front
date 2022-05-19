@@ -1,7 +1,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: incidents-template-var3
+  name: incidents-template-var
   annotations:
     description: "A template to deploy the Antennas Incident Service"
     tags: "quarkus,service"
@@ -57,7 +57,7 @@ objects:
                 - name: APIKEY
                   valueFrom:
                     secretKeyRef:
-                      name: incidents-secret
+                      name: incidents-secret2
                       key: apikey
               image: quay.io/sebastienblanc0/antennas-incident:1.0.0-SNAPSHOT
               imagePullPolicy: Always
@@ -69,7 +69,7 @@ objects:
   - kind: Secret
     apiVersion: v1
     metadata:
-      name: incidents-secret
+      name: incidents-secret2
     stringData:
       apikey: ${APIKEY}
     type: Opaque
