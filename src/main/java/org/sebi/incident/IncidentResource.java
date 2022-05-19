@@ -8,7 +8,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-@Path("incidents")
+@Path("rest")
 public class IncidentResource {
     @RestClient
     IncidentRestClient incidentRestClient;
@@ -16,7 +16,8 @@ public class IncidentResource {
     @ConfigProperty(name = "APIKEY", defaultValue = "secret")
     String apiKey;
 
-    @GET
+    @GET()
+    @Path("incidents")
     public List<Incident> getIncidents(){
        return incidentRestClient.getIncidents(apiKey);
     } 
